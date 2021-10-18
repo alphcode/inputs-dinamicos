@@ -18,22 +18,46 @@
         }
     </style>
     
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <button class="btn btn-primary" id="agregar">Agregar campo +</button>
-            </div>
-        </div>
+    <div class="container pt-5">
+
         <div class="row">
                 <div class="col-md-12">
-                    <div class="form-row clonar">
-                        <div class="form-group col-md-12">
-                            <label for="">Nombres</label>
-                            <input type="text" class="form-control" name="nombre[]">
-                            <span class="badge badge-pill badge-danger puntero ocultar">Eliminar</span>
+
+                    <form id="form_contacto">
+                    
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="">Contacto</label>
+                                <input type="text" class="form-control" name="nombre_contacto">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="">Número</label>
+                                <input type="text" class="form-control" name="numero">
+                            </div>
                         </div>
-                    </div>
-                    <div id="contenedor"></div>
+
+                        <div class="form-row">
+                            <div class="col-md-12 text-center">
+                                <button class="btn btn-primary" id="agregar">Agregar campo +</button>
+                            </div>
+                        </div>
+                        <div class="form-row clonar">
+                            <div class="form-group col-md-12">
+                                <label for="">Nombres</label>
+                                <input type="text" class="form-control" name="nombres[]">
+                                <span class="badge badge-pill badge-danger puntero ocultar">Eliminar</span>
+                            </div>
+                        </div>
+                        <div id="contenedor"></div>
+
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" id="enviar_contacto">Enviar</button>
+                            </div>
+                        </div>
+
+                    </form>
+
                 </div>
         </div>
     </div>
@@ -44,6 +68,9 @@
     
         let agregar = document.getElementById('agregar');
         let contenido = document.getElementById('contenedor');
+
+        let boton_enviar = document.querySelector('#enviar_contacto')
+
         agregar.addEventListener('click', e =>{
             e.preventDefault();
             let clonado = document.querySelector('.clonar');
@@ -63,6 +90,34 @@
                 contenedor.parentNode.removeChild(contenedor);
             }
         });
+
+
+        boton_enviar.addEventListener('click', e => {
+            e.preventDefault();
+
+            const formulario = document.querySelector('#form_contacto');
+            const form = new FormData(formulario);
+
+            const peticion = {
+                body:form,
+                method:'POST'
+            };
+
+            fetch('php/inserta-contacto.php',peticion)
+                .then(res => res.json())
+                .then(res => {
+                    if (res['respuesta']) {
+                        alert(res['mensaje']);
+                        formulario.reset();
+                    }else{
+                        alert(res['mensaje']);
+                    }
+
+                });
+
+
+        });
+
 
     </script>
 
